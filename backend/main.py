@@ -3,7 +3,7 @@ from app.api import router
 
 app = FastAPI(title="AI Proctoring System API")
 
-app.include_router(router)
+app.include_router(router, prefix="/api/v1")
 
 @app.get("/")
 async def root():

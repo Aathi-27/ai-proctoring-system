@@ -11,4 +11,6 @@ passlib[bcrypt]
 httpx
 pytest
 black
+asyncpg
+
 

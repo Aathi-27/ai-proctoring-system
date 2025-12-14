@@ -7,9 +7,10 @@ logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
-def init_postgres():
+async def init_postgres():
     logger.info("Creating PostgreSQL tables...")
-    Base.metadata.create_all(bind=engine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     logger.info("PostgreSQL tables created.")
 
 async def init_mongo():
@@ -31,7 +32,7 @@ async def init_mongo():
     logger.info("MongoDB initialization complete.")
 
 async def main():
-    init_postgres()
+    await init_postgres()
     await init_mongo()
 
 if __name__ == "__main__":

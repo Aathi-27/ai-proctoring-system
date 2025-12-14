@@ -10,8 +10,9 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    role = Column(String)  # student, proctor, admin
+    role = Column(String)  # candidate, invigilator, admin, integrator
     created_at = Column(DateTime, default=datetime.utcnow)
+
 
     sessions = relationship("ExamSession", back_populates="student")
 

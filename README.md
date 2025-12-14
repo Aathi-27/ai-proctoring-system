@@ -26,6 +26,11 @@ The system consists of a Next.js frontend communicating with a FastAPI backend. 
 
 ## Local Setup
 
+### Known Browser Limitations
+- **Browser-only monitoring**: The system relies on browser APIs (WebRTC) and cannot monitor full OS-level activity or other applications.
+- **Background tab detection**: Detection of tab switching is "best-effort" using the Page Visibility API and may be circumvented.
+- **No OS hooks**: We do not install any software on the candidate's machine, so we cannot lock down the computer.
+
 ### Prerequisites
 - Docker and Docker Compose
 - Node.js (for local frontend development without Docker)
@@ -46,6 +51,8 @@ The system consists of a Next.js frontend communicating with a FastAPI backend. 
    - Backend: http://localhost:8000
    - MinIO Console: http://localhost:9001
    - Postgres, MongoDB, Redis
+
+   **Note:** The `.env.example` sets `NEXT_PUBLIC_API_URL=http://backend:8000` for Docker networking. If you are running the frontend locally (outside Docker) but accessing the backend in Docker, you may need to set this to `http://localhost:8000`.
 
 ### Database Initialization
 The database schema is initialized automatically by the backend service. For MongoDB collections, they are initialized when the application starts or via the initialization script.

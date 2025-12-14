@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+alembic
+pydantic
+motor
+python-multipart
+python-jose[cryptography]
+passlib[bcrypt]
+httpx
+pytest
+black
+asyncpg
+
+

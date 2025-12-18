@@ -1,0 +1,44 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Audio Configuration
+SAMPLE_RATE = 16000
+FRAME_DURATION_MS = 32
+FRAME_SIZE = int(SAMPLE_RATE * FRAME_DURATION_MS / 1000)
+MONO_CHANNELS = 1
+
+# VAD Configuration
+VAD_THRESHOLD = 0.5
+VAD_MAX_LATENCY_MS = 100
+
+# Voice Detection Configuration
+BACKGROUND_SPEECH_THRESHOLD = 0.4
+MULTIPLE_VOICES_THRESHOLD = 0.6
+VOICE_DETECTION_WINDOW_MS = 5000  # 5 seconds
+VOICE_CHANGE_THRESHOLD = 0.5
+
+# Audio Processing
+NOISE_REDUCTION_ENABLED = True
+AUDIO_NORMALIZATION_ENABLED = True
+BUFFER_WINDOW_DURATION_S = 2
+
+# MongoDB Configuration
+MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
+MONGODB_DB = os.getenv("MONGODB_DB", "audio_pipeline")
+MONGODB_EVENTS_COLLECTION = "audio_events"
+MONGODB_STATS_COLLECTION = "audio_statistics"
+
+# Flask Configuration
+FLASK_ENV = os.getenv("FLASK_ENV", "production")
+DEBUG = FLASK_ENV == "development"
+HOST = os.getenv("HOST", "0.0.0.0")
+PORT = int(os.getenv("PORT", 5000))
+
+# Audio Event Types
+EVENT_VAD_DETECTED = "VAD_DETECTED"
+EVENT_SPEECH_SILENCE_RATIO = "SPEECH_SILENCE_RATIO"
+EVENT_BACKGROUND_SPEECH = "BACKGROUND_SPEECH"
+EVENT_MULTIPLE_VOICES = "MULTIPLE_VOICES"
+EVENT_NOISE_SPIKE = "NOISE_SPIKE"

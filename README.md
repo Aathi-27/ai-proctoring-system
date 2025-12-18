@@ -3,6 +3,11 @@
 ## Overview
 This is an AI-Powered Proctoring System designed to provide secure and intelligent exam proctoring. It leverages real-time audio/video analysis to detect anomalies and ensure exam integrity.
 
+## Features
+- **Authentication:** JWT-based auth with RBAC (Candidate, Invigilator, Admin)
+- **Monitoring:** Real-time face detection, object detection, voice activity detection
+- **Security:** Secure browser monitoring, screen analysis
+
 ## Tech Stack
 - **Frontend:** Next.js 14, TypeScript, TailwindCSS, WebRTC, WebSockets
 - **Backend:** FastAPI, SQLAlchemy, Motor (MongoDB async driver), Pydantic
@@ -14,12 +19,10 @@ This is an AI-Powered Proctoring System designed to provide secure and intellige
 ## Architecture
 The system consists of a Next.js frontend communicating with a FastAPI backend. PostgreSQL is used for relational data (users, exams), while MongoDB stores high-volume event logs and risk scores. MinIO is used for storing exam session recordings.
 
-(Architecture Diagram Placeholder)
-
 ## Repository Structure
 - `/frontend`: Next.js 14 application
 - `/backend`: FastAPI application
-- `/ai`: AI models and processing logic (To be implemented)
+- `/ai`: AI models and processing logic
 - `/docker`: Docker configuration
 - `/tests`: System-wide tests
 - `/docs`: Documentation

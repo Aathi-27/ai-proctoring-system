@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes the implementation of the Exam Proctoring platform, including Authentication, User Management, WebRTC Media Capture, and WebSocket Infrastructure.
+This document summarizes the implementation of the Exam Proctoring platform, including Authentication, User Management, WebRTC Media Capture, WebSocket Infrastructure, and Face Detection/Liveness.
 
 ## ✅ Completed Features
 
@@ -69,6 +69,57 @@ Implementation: `backend/app/middleware/auth.py`
 - ✅ Audio chunks streamed in real-time
 - ✅ Bandwidth optimization (configurable quality settings)
 
+### 9. Face Detection (MediaPipe)
+- ✅ **Continuous face detection** from video frames with real-time processing (<500ms latency)
+- ✅ **Confidence scores** for each detected face (0-1 range)
+- ✅ **Face bounding boxes** with precise pixel coordinates
+- ✅ **468 facial landmarks** per face (MediaPipe Face Mesh)
+- ✅ **68-point face outline** extraction for compatibility
+- ✅ **CPU-optimized** for 5-10 FPS input processing
+- ✅ **Multiple face detection** capability (up to 5 faces configurable)
+
+### 10. Multiple Face Detection & Alerts
+- ✅ Alert triggered when 2+ faces detected in frame
+- ✅ `MULTIPLE_PERSONS` event emitted with:
+  - Face count
+  - Confidence scores for all faces
+  - Timestamp
+  - Risk score contribution (+20 points)
+- ✅ Logged to MongoDB events collection
+
+### 11. Candidate Leaving Frame Detection
+- ✅ Tracks when face disappears from view
+- ✅ Alert after >5 seconds threshold (configurable)
+- ✅ `FACE_NOT_DETECTED` event emitted with:
+  - Duration in seconds
+  - Timestamp
+  - Risk score contribution (+20 points)
+- ✅ Automatic resume when face reappears
+
+### 12. Liveness Verification (Phase-1)
+
+#### Blink Detection
+- ✅ **Eye Aspect Ratio (EAR)** method implementation
+- ✅ Monitors 6 landmarks per eye
+- ✅ Detects eye closure/opening sequences within 5-10 frames
+- ✅ Left/right eye independent tracking
+- ✅ False positive prevention with temporal filtering (>0.3s between blinks)
+- ✅ Threshold: EAR < 0.2 (configurable)
+
+#### Movement Detection
+- ✅ **Head Pose Estimation** using PnP algorithm
+- ✅ Tracks yaw, pitch, and roll angles
+- ✅ Detects significant movement (>10° threshold)
+- ✅ Maintains pose history per exam session
+- ✅ Calculates pose change deltas
+
+#### Liveness Scoring (0-100)
+- ✅ Blink count contribution: up to 50 points
+- ✅ Movement events contribution: up to 50 points
+- ✅ Requires BOTH blinks AND movement for "live" status
+- ✅ Time window: 30 seconds (configurable)
+- ✅ Real-time score updates
+
 ## Technical Implementation
 
 ### Backend Architecture
@@ -79,21 +130,25 @@ Implementation: `backend/app/middleware/auth.py`
 - Pydantic v2 for data validation
 - Python 3.9+ with async/await
 - PostgreSQL for user data
-- MongoDB for event logs (planned)
+- MongoDB for event logs
+- MediaPipe 0.10.14: Face detection and landmark extraction
+- OpenCV 4.12: Image processing
+- NumPy 2.2: Numerical computations
 
 **Key Components:**
 1. **ConnectionManager** (`app/websocket/connection_manager.py`)
    - Manages active WebSocket connections
    - Handles exam rooms (grouping candidates by exam)
    - Broadcasting to specific groups
-   - Automatic ping/pong heartbeat (30s interval)
-   - Reconnection support
 
 2. **WebSocket Endpoints** (`app/websocket/endpoints.py`)
    - Candidate endpoint: `/ws/candidate/{session_id}?exam_id={exam_id}`
    - Invigilator endpoint: `/ws/exam/{exam_id}?invigilator_id={invigilator_id}`
-   - Message routing and broadcasting
-   - Error handling and validation
+
+3. **Face Detection Service** (`app/services/face_detection.py`)
+   - MediaPipe integration
+   - Liveness detection logic
+   - Event emission
 
 ### Frontend Architecture
 
@@ -124,3 +179,4 @@ Implementation: `backend/app/middleware/auth.py`
 - `candidate_status` - Candidate streaming status
 - `stream_quality` - Quality metrics
 - `alert` - Alerts to invigilators
+- `face_detected` - Face analysis results

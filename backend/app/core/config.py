@@ -17,8 +17,26 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str
     
+    # MongoDB
+    MONGODB_URL: str = "mongodb://localhost:27017"
+    DATABASE_NAME: str = "exam_proctoring"
+    EVENTS_COLLECTION: str = "events"
+    
     # CORS
     BACKEND_CORS_ORIGINS: list[str] = ["http://localhost:3000"]
+    
+    # Face Detection
+    FACE_DETECTION_CONFIDENCE: float = 0.5
+    MAX_NUM_FACES: int = 5
+    
+    # Liveness
+    FACE_NOT_DETECTED_THRESHOLD: int = 5
+    BLINK_EAR_THRESHOLD: float = 0.2
+    MOVEMENT_THRESHOLD: float = 10.0
+    
+    # Processing
+    LIVENESS_WINDOW_SECONDS: int = 30
+    TARGET_FPS: int = 10
     
     class Config:
         env_file = ".env"

@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Dict, Any, List
-from app.database.mongodb import MongoDBClient
+from app.db.mongodb import MongoDBClient
 from app.models.events import (
     EventType,
     FaceDetectedEvent,

@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from typing import List, Tuple, Optional, Dict
-from app.config import settings
+from app.core.config import settings
 
 
 class FaceDetectionService:
@@ -10,15 +10,15 @@ class FaceDetectionService:
         self.mp_face_mesh = mp.solutions.face_mesh
         self.face_mesh = self.mp_face_mesh.FaceMesh(
             static_image_mode=False,
-            max_num_faces=settings.max_num_faces,
+            max_num_faces=settings.MAX_NUM_FACES,
             refine_landmarks=True,
-            min_detection_confidence=settings.face_detection_confidence,
-            min_tracking_confidence=settings.face_detection_confidence
+            min_detection_confidence=settings.FACE_DETECTION_CONFIDENCE,
+            min_tracking_confidence=settings.FACE_DETECTION_CONFIDENCE
         )
         self.mp_face_detection = mp.solutions.face_detection
         self.face_detection = self.mp_face_detection.FaceDetection(
             model_selection=0,
-            min_detection_confidence=settings.face_detection_confidence
+            min_detection_confidence=settings.FACE_DETECTION_CONFIDENCE
         )
 
     def detect_faces(self, image: np.ndarray) -> Tuple[int, List[float], List[List[float]], Optional[Dict[str, float]]]:

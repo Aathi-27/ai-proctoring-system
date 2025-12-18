@@ -1,7 +1,7 @@
 import numpy as np
 from typing import List, Tuple, Dict, Optional
 from datetime import datetime, timedelta
-from app.config import settings
+from app.core.config import settings
 
 
 class LivenessDetectionService:
@@ -54,10 +54,10 @@ class LivenessDetectionService:
         if len(self.ear_history[exam_id]) >= 3:
             recent_ears = [h['ear'] for h in self.ear_history[exam_id][-5:]]
             
-            below_threshold = [ear < settings.blink_ear_threshold for ear in recent_ears[-3:]]
+            below_threshold = [ear < settings.BLINK_EAR_THRESHOLD for ear in recent_ears[-3:]]
             
             if any(below_threshold) and len(recent_ears) >= 5:
-                if recent_ears[-1] > settings.blink_ear_threshold and min(recent_ears[-3:-1]) < settings.blink_ear_threshold:
+                if recent_ears[-1] > settings.BLINK_EAR_THRESHOLD and min(recent_ears[-3:-1]) < settings.BLINK_EAR_THRESHOLD:
                     current_time = datetime.utcnow()
                     if exam_id not in self.last_blink_time or (current_time - self.last_blink_time[exam_id]).total_seconds() > 0.3:
                         self.last_blink_time[exam_id] = current_time
@@ -93,7 +93,7 @@ class LivenessDetectionService:
         
         total_change = pitch_diff + yaw_diff + roll_diff
         
-        movement_detected = total_change > settings.movement_threshold
+        movement_detected = total_change > settings.MOVEMENT_THRESHOLD
         
         if movement_detected:
             if exam_id not in self.movement_history:
@@ -123,7 +123,7 @@ class LivenessDetectionService:
 
     def calculate_liveness_score(self, exam_id: str) -> Tuple[float, int, int, bool]:
         current_time = datetime.utcnow()
-        window_start = current_time - timedelta(seconds=settings.liveness_window_seconds)
+        window_start = current_time - timedelta(seconds=settings.LIVENESS_WINDOW_SECONDS)
         
         blink_count = 0
         if exam_id in self.blink_history:

@@ -1,5 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
-from app.config import settings
+from app.core.config import settings
 
 
 class MongoDBClient:
@@ -8,8 +8,8 @@ class MongoDBClient:
 
     @classmethod
     async def connect(cls):
-        cls.client = AsyncIOMotorClient(settings.mongodb_url)
-        cls.database = cls.client[settings.database_name]
+        cls.client = AsyncIOMotorClient(settings.MONGODB_URL)
+        cls.database = cls.client[settings.DATABASE_NAME]
 
     @classmethod
     async def close(cls):
@@ -22,7 +22,7 @@ class MongoDBClient:
 
     @classmethod
     def get_events_collection(cls):
-        return cls.database[settings.events_collection]
+        return cls.database[settings.EVENTS_COLLECTION]
 
 
 async def get_database():

@@ -26,6 +26,10 @@ async def lifespan(app: FastAPI):
     from app.db.database import Base, engine
     Base.metadata.create_all(bind=engine)
     
+    # MongoDB init
+    from app.db.mongodb import MongoDBClient
+    await MongoDBClient.connect()
+    
     # WebSocket ping task
     logger.info("Starting WebSocket ping task...")
     ping_task_handle = asyncio.create_task(ping_task())
@@ -38,6 +42,8 @@ async def lifespan(app: FastAPI):
         await ping_task_handle
     except asyncio.CancelledError:
         pass
+        
+    await MongoDBClient.close()
 
 app = FastAPI(
     title=settings.APP_NAME,

@@ -1,0 +1,24 @@
+# Node
+node_modules
+.next
+out
+build
+coverage
+
+# Python
+__pycache__
+venv
+.venv
+.pytest_cache
+.coverage
+htmlcov
+
+# Git
+.git
+.gitignore
+.dockerignore
+
+# Env
+.env
+.env.*
+!.env.example
